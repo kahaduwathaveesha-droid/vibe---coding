@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Idea Board | Dark Edition</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --card-bg: #1e293b;
+            --primary: #38bdf8;
+            --primary-glow: rgba(56, 189, 248, 0.4);
+            --secondary: #818cf8;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border: rgba(255, 255, 255, 0.1);
+            --radius: 16px;
+            --shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: 
+                radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.1) 0px, transparent 50%),
+                radial-gradient(at 100% 100%, rgba(129, 140, 248, 0.1) 0px, transparent 50%);
+            color: var(--text-primary);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 60px 20px;
+            line-height: 1.6;
+        }
+
+        .idea-board {
+            width: 100%;
+            max-width: 850px;
+            background-color: var(--card-bg);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            padding: 32px 24px;
+            text-align: center;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.03), transparent);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .input-area {
+            padding: 24px;
+            background: rgba(15, 23, 42, 0.3);
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .input-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        select, input[type="text"] {
+            background-color: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        select {
+            flex: 0.4;
+            cursor: pointer;
+        }
+
+        input[type="text"] {
+            flex: 1;
+        }
+
+        select:focus, input[type="text"]:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+            background-color: rgba(15, 23, 42, 0.8);
+        }
+
+        button {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            border: none;
+            padding: 14px;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.3);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 189, 248, 0.5);
+            filter: brightness(1.1);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .ideas {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .idea {
+            padding: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .idea::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary);
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .idea:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: scale(1.02);
+        }
+
+        .idea:hover::before {
+            opacity: 1;
+        }
+
+        .idea-content {
+            font-weight: 600;
+            font-size: 16px;
+            color: #fff;
+            margin-bottom: 6px;
+        }
+
+        .idea span {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .idea span strong {
+            color: var(--secondary);
+            background: rgba(129, 140, 248, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        /* Empty state hint */
+        .idea-board::after {
+            content: "💡 Share your vision";
+            display: block;
+            text-align: center;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--text-secondary);
+            opacity: 0.5;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        /* Animated Background Elements */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-text {
+            position: absolute;
+            color: var(--primary);
+            font-weight: 800;
+            font-size: 8vw;
+            opacity: 0.03;
+            white-space: nowrap;
+            user-select: none;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            from { transform: translate(-20%, 100vh) rotate(-5deg); }
+            to { transform: translate(120%, -20vh) rotate(10deg); }
+        }
+
+        .bg-text:nth-child(2) { animation-duration: 25s; animation-delay: -5s; left: 20%; font-size: 12vw; }
+        .bg-text:nth-child(3) { animation-duration: 30s; animation-delay: -15s; left: 50%; font-size: 6vw; }
+        .bg-text:nth-child(4) { animation-duration: 22s; animation-delay: -8s; left: 80%; font-size: 10vw; }
+
+        @media (max-width: 480px) {
+            .input-row {
+                flex-direction: column;
+            }
+            select {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-elements">
+        <div class="bg-text">INNOVATE</div>
+        <div class="bg-text">CREATE</div>
+        <div class="bg-text">SPARK</div>
+        <div class="bg-text">DESIGN</div>
+    </div>
+    <div class="idea-board">
+        <div class="header">
+            <h1>Group Idea Board</h1>
+        </div>
+        <div class="input-area">
+            <div class="input-row">
+                <select aria-label="Select User">
+                    <option disabled selected>Contributor</option>
+                    <option>Mr. Thaveesha</option>
+                    <option>Mr. Pasindu</option>
+                    <option>Mr. Rashmika</option>
+                    <option>Mrs. Aranya</option>
+                    <option>Mrs. Sulani</option>
+                    <option>Mrs. Ashvini</option>
+                    <option>Mrs. Kavindi</option>
+                    <option>Mrs. Hiruni</option>
+                    <option>Mr. Sajith</option>
+                    <option>Mr. Tharindu</option>
+                </select>
+                <input type="text" placeholder="Drop a brilliant idea..." aria-label="Idea Input">
+            </div>
+            <button>Publish Idea</button>
+        </div>
+        <div class="ideas">
+            <div class="idea">
+                <div class="idea-content">Build a study planner</div>
+                <span>Proposed by <strong>Thaveesha, Aranya, Kavindi & Tharindu</strong></span>
+            </div>
+            <div class="idea">
+                <div class="idea-content">Start a podcast</div>
+                <span>Proposed by <strong>Pasindu, Sulani & Hiruni</strong></span>
+            </div>
+            <div class="idea">
+                <div class="idea-content">Organize a coding workshop</div>
+                <span>Proposed by <strong>Rashmika, Ashvini & Sajith</strong></span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
